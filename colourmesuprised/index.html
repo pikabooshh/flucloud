@@ -60,6 +60,13 @@
 
   input[type="range"] {
     width: 100%;
+    height: 16px;
+    border-radius: 8px;
+    appearance: none;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    outline: none;
+    border: 1px solid #555;
   }
 
   button {
@@ -98,7 +105,7 @@
 </style>
 </head>
 <body>
-<h1>HSL Colour Me Suprised</h1>
+<h1>HSL Color Match Game</h1>
 
 <button id="modeBtn">Switch to Two-Player Mode</button>
 <p id="modeText">Mode: Single Player</p>
@@ -267,6 +274,16 @@ function updateGuessColor(){
 // reset sliders and UI selection
 function resetSliders(){
   hSlider.value = 0; sSlider.value = 50; lSlider.value = 50; updateGuessColor();
+
+  // update slider gradients
+  const hueGrad = `linear-gradient(to right, ${Array.from({length: 361}, (_,i)=>`hsl(${i},100%,50%)`).join(',')})`;
+  document.getElementById("h").style.background = hueGrad;
+
+  const sGrad = `linear-gradient(to right, hsl(${h},0%,${l}%), hsl(${h},100%,${l}%))`;
+  document.getElementById("s").style.background = sGrad;
+
+  const lGrad = `linear-gradient(to right, hsl(${h},${s}%,0%), hsl(${h},${s}%,50%), hsl(${h},${s}%,100%))`;
+  document.getElementById("l").style.background = lGrad;
 }
 
 // ----- mode button -----
