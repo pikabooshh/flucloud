@@ -1,207 +1,311 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-size: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            transition: background-color 0.5s;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HSL Color Training</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #121212;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      margin: 0;
+      line-height: 1.5;
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    h1 {
+      font-size: 1.9rem;
+      text-align: center;
+      margin: 10px 0;
+      color: #d0d0ff;
+      background: linear-gradient(90deg, #a0a0ff, #ff90e0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-        .container {
-            text-align: center;
-        }
+    .instructions {
+      text-align: center;
+      max-width: 550px;
+      margin: 12px 0 16px;
+      font-size: 1.05rem;
+      color: #bbb;
+    }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 100px;
-            height: 60px;
-            margin-top: 20px;
-        }
+    .boxes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin: 10px 0 20px;
+    }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+    .color-box {
+      width: 200px;
+      height: 200px;
+      border-radius: 14px;
+      border: 2px solid #444;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: background-color 0.4s;
-            border-radius: 60px;
-        }
+    .box-label {
+      text-align: center;
+      margin-top: 8px;
+      font-size: 1.05rem;
+      color: #ddd;
+      font-weight: 500;
+    }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 46px;
-            width: 46px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: transform 0.4s;
-            border-radius: 50%;
-        }
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 420px;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      margin: 10px 0;
+    }
 
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
+    label {
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      color: #e0e0ff;
+    }
 
-        input:checked + .slider:before {
-            transform: translateX(46px);
-        }
+    input[type="range"] {
+      width: 100%;
+      height: 22px;
+      border-radius: 11px;
+      appearance: none;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      outline: none;
+      border: 1px solid #555;
+    }
 
-        .color-code {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 5px;
-            background-color: black;
-            color: black;
-            cursor: pointer;
-            user-select: none;
-            border-radius: 5px;
-            transition: background-color 0.4s, color 0.4s;
-        }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
 
-        .color-code:hover {
-            background-color: white;
-            color: black;
-        }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: bold;
+      transition: all 0.2s;
+      min-width: 140px;
+    }
 
-        .tooltip {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: visibility 0s, opacity 0.4s;
-        }
+    #submitBtn {
+      background: linear-gradient(to right, #6a5af9, #7c73ff);
+    }
+    #submitBtn:hover {
+      background: linear-gradient(to right, #5a4aed, #6b64f0);
+      transform: translateY(-2px);
+    }
 
-        .color-code:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
+    #randomBtn {
+      background: linear-gradient(to right, #ff6b6b, #ff8e8e);
+    }
+    #randomBtn:hover {
+      background: linear-gradient(to right, #ff5252, #ff7575);
+      transform: translateY(-2px);
+    }
 
-        .color-picker {
-            margin-top: 20px;
-        }
+    .result-box {
+      margin-top: 20px;
+      padding: 18px;
+      font-size: 1.15rem;
+      text-align: center;
+      max-width: 90vw;
+      border-radius: 14px;
+      background: #252525;
+      display: none;
+      border: 1px solid #444;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
 
-        .color-picker input[type="color"] {
-            appearance: none;
-            border: none;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            outline: none;
-            cursor: pointer;
-        }
+    .metric {
+      margin: 8px 0;
+      font-size: 1.2rem;
+    }
 
-        .color-picker input[type="color"]::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
+    .delta-e {
+      color: #ff9e7d;
+      font-weight: bold;
+    }
 
-        .color-picker input[type="color"]::-webkit-color-swatch {
-            border: none;
-            border-radius: 50%;
-        }
-    </style>
+    .match-pct {
+      color: #70f0a0;
+      font-weight: bold;
+    }
+
+    .hsl-values {
+      font-family: 'Consolas', monospace;
+      background: rgba(0,0,0,0.35);
+      padding: 8px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 1rem;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .component-error {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #aaa;
+    }
+  </style>
 </head>
 <body>
-    <h2>Switch to Get a New Color</h2>
-    
-    <div class="container">
-        <label class="switch">
-            <input type="checkbox" id="colorSwitch" onclick="toggleColor()">
-            <span class="slider"></span>
-        </label>
+  <h1>🎨 HSL Color Training Pro</h1>
+  <p class="instructions">Match the <strong>Target Color</strong> using HSL sliders. Check accuracy, then randomize when ready!</p>
+
+  <div class="boxes">
+    <div>
+      <div id="targetBox" class="color-box"></div>
+      <div class="box-label">Target Color</div>
     </div>
-
-    <div class="container">
-        <div id="colorCode" class="color-code" onclick="copyColorCode()"></div>
-        <div id="tooltip" class="tooltip"></div>
+    <div>
+      <div id="guessBox" class="color-box"></div>
+      <div class="box-label">Your Guess</div>
     </div>
+  </div>
 
-    <div class="container color-picker">
-        <input type="color" id="colorPicker" onchange="changeColor()">
-    </div>
-    
-    <script>
-        function toggleColor() {
-            var body = document.body;
-            var switchElement = document.getElementById("colorSwitch");
-            var colorCodeElement = document.getElementById("colorCode");
-            
-            if (switchElement.checked) {
-                var randomColor = getRandomColor();
-                body.style.backgroundColor = randomColor;
-                colorCodeElement.innerText = randomColor;
-                colorCodeElement.style.color = randomColor;
-            } else {
-                body.style.backgroundColor = "black";
-                colorCodeElement.innerText = "";
-            }
-        }
+  <div class="panel">
+    <label>Hue <span id="h-value">0°</span></label>
+    <input id="h" type="range" min="0" max="360" value="0" />
 
-        function getRandomColor() {
-            var letters = "0123456789ABCDEF";
-            var color = "#";
-            
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            
-            return color;
-        }
+    <label>Saturation <span id="s-value">50%</span></label>
+    <input id="s" type="range" min="0" max="100" value="50" />
 
-        function copyColorCode() {
-            var colorCodeElement = document.getElementById("colorCode");
-            var colorCode = colorCodeElement.innerText;
-            var tooltipElement = document.getElementById("tooltip");
-            
-            if (colorCode) {
-                navigator.clipboard.writeText(colorCode).then(function() {
-                    colorCodeElement.innerText = "Copied!";
-                    setTimeout(function() {
-                        colorCodeElement.innerText = colorCode;
-                    }, 1000);
-                });
-            }
-        }
+    <label>Lightness <span id="l-value">50%</span></label>
+    <input id="l" type="range" min="0" max="100" value="50" />
+  </div>
 
-        function changeColor() {
-            var body = document.body;
-            var colorPicker = document.getElementById("colorPicker");
-            var colorCodeElement = document.getElementById("colorCode");
-            
-            var selectedColor = colorPicker.value;
-            body.style.backgroundColor = selectedColor;
-            colorCodeElement.innerText = selectedColor;
-            colorCodeElement.style.color = selectedColor;
-        }
-    </script>
+  <div class="buttons">
+    <button id="submitBtn">🔍 Check Accuracy</button>
+    <button id="randomBtn">🎲 Randomize Target</button>
+  </div>
+
+  <div id="resultBox" class="result-box"></div>
+
+  <script>
+    let target = { h: 0, s: 0, l: 0 };
+    let guess = { h: 0, s: 50, l: 50 };
+
+    function newTarget() {
+      target.h = Math.floor(Math.random() * 361);
+      target.s = Math.floor(Math.random() * 101);
+      target.l = Math.floor(Math.random() * 101);
+      document.getElementById("targetBox").style.background = `hsl(${target.h}, ${target.s}%, ${target.l}%)`;
+      document.getElementById("resultBox").style.display = "none";
+    }
+
+    function updateGuessColor() {
+      document.getElementById("guessBox").style.background = `hsl(${guess.h}, ${guess.s}%, ${guess.l}%)`;
+      document.getElementById("h-value").textContent = `${guess.h}°`;
+      document.getElementById("s-value").textContent = `${guess.s}%`;
+      document.getElementById("l-value").textContent = `${guess.l}%`;
+
+      // Slider gradients
+      const hueGrad = `linear-gradient(to right, ${Array.from({length:361}, (_,i) => `hsl(${i},100%,50%)`).join(',')})`;
+      document.getElementById("h").style.background = hueGrad;
+
+      const sGrad = `linear-gradient(to right, hsl(${guess.h}, 0%, ${guess.l}%), hsl(${guess.h}, 100%, ${guess.l}%))`;
+      document.getElementById("s").style.background = sGrad;
+
+      const lGrad = `linear-gradient(to right, hsl(${guess.h}, ${guess.s}%, 0%), hsl(${guess.h}, ${guess.s}%, 50%), hsl(${guess.h}, ${guess.s}%, 100%))`;
+      document.getElementById("l").style.background = lGrad;
+    }
+
+    function resetSliders() {
+      guess.h = 0;
+      guess.s = 50;
+      guess.l = 50;
+      document.getElementById("h").value = 0;
+      document.getElementById("s").value = 50;
+      document.getElementById("l").value = 50;
+      updateGuessColor();
+    }
+
+    // Perceptually-aware Delta E approximation
+    function calculateDeltaE(guess, target) {
+      const dh = Math.min(Math.abs(guess.h - target.h), 360 - Math.abs(guess.h - target.h));
+      const ds = Math.abs(guess.s - target.s);
+      const dl = Math.abs(guess.l - target.l);
+
+      // Weight hue error by saturation & lightness (gray has no hue!)
+      const hueWeight = (target.s / 100) * (1 - Math.abs(target.l - 50) / 50);
+      const weightedHueError = dh * hueWeight * 0.5; // scale down
+
+      // Saturation and lightness errors
+      const satError = ds * 0.3;
+      const lightError = dl * 0.7;
+
+      return Math.sqrt(weightedHueError**2 + satError**2 + lightError**2);
+    }
+
+    function showResult() {
+      const deltaE = calculateDeltaE(guess, target);
+      // Normalize Delta E: 0 = perfect, ~20 = very bad → map to 0–100%
+      const matchPct = Math.max(0, Math.min(100, (1 - deltaE / 30) * 100)).toFixed(1);
+
+      const dh = Math.min(Math.abs(guess.h - target.h), 360 - Math.abs(guess.h - target.h));
+      const ds = Math.abs(guess.s - target.s);
+      const dl = Math.abs(guess.l - target.l);
+
+      const resultBox = document.getElementById("resultBox");
+      resultBox.innerHTML = `
+        <div class="metric">Match Accuracy: <span class="match-pct">${matchPct}%</span></div>
+        <div class="metric">Delta E (approx): <span class="delta-e">${deltaE.toFixed(2)}</span></div>
+        <div class="hsl-values">
+          <strong>Your Guess:</strong> HSL(${guess.h}, ${guess.s}%, ${guess.l}%)<br>
+          <strong>Target:</strong> HSL(${target.h}, ${target.s}%, ${target.l}%)
+        </div>
+        <div class="component-error">
+          H error: ${dh}° &nbsp; | &nbsp; S error: ${ds}% &nbsp; | &nbsp; L error: ${dl}%
+        </div>
+      `;
+      resultBox.style.display = "block";
+    }
+
+    // Event Listeners
+    document.getElementById("h").addEventListener("input", e => { guess.h = +e.target.value; updateGuessColor(); });
+    document.getElementById("s").addEventListener("input", e => { guess.s = +e.target.value; updateGuessColor(); });
+    document.getElementById("l").addEventListener("input", e => { guess.l = +e.target.value; updateGuessColor(); });
+
+    document.getElementById("submitBtn").onclick = () => {
+      showResult();
+    };
+
+    document.getElementById("randomBtn").onclick = () => {
+      newTarget();
+      resetSliders();
+    };
+
+    // Initialize
+    newTarget();
+    updateGuessColor();
+  </script>
 </body>
 </html>
+
